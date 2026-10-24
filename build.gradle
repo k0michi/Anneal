@@ -72,11 +72,31 @@ def patchClasses = [
     'cpw/mods/fml/common/asm/transformers/EventSubscriptionTransformer',
 ]
 
+def serverClassPath = {
+    def json = new groovy.json.JsonSlurper().parse(file("fml/jsons/${minecraft.version}-rel.json"))
+    def paths = json.versionInfo.libraries.findAll { it.serverreq }.collect { lib ->
+        def (coords, ext) = lib.name.contains('@') ? lib.name.split('@') as List : [lib.name, 'jar']
+        def (group, name, version, classifier) = coords.tokenize(':') + [null]
+        "libraries/${group.replace('.', '/')}/${name}/${version}/${name}-${version}${classifier ? '-' + classifier : ''}.${ext}"
+    }
+    (paths + "minecraft_server.${minecraft.version}.jar").join(' ')
+}
+
 task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
     classifier = 'patches'
     from({ zipTree(tasks.packageUniversal.archivePath) }) {
         patchClasses.each { name -> include "${name}.class", "${name}\$*.class" }
     }
+    manifest {
+        attributes 'Main-Class': minecraft.mainClass, 'TweakClass': minecraft.tweakClass, 'Class-Path': serverClassPath()
+    }
+}
+
+tasks.generateInstallJson.addReplacement('@patches_jar@', { tasks.packagePatches.archiveName })
+tasks.packageInstaller {
+    dependsOn packagePatches
+    exclude { it.file == tasks.packageUniversal.archivePath }
+    from { tasks.packagePatches.archivePath }
 }
 
 def extraRepositories = '''

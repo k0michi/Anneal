@@ -4,7 +4,7 @@
     "target": "@minecraft_version@-@project@@version@",
     "path": "@artifact@",
     "version": "@project@ @version@",
-    "filePath": "@universal_jar@",
+    "filePath": "@patches_jar@",
     "welcome": "Welcome to the simple @project@ installer.",
     "minecraft": "@minecraft_version@",
     "logo": "/big_logo.png"
@@ -97,20 +97,6 @@
       {
         "name": "@artifact@",
         "url": "https://maven.minecraftforge.net"
-      },
-      {
-        "name": "de.oceanlabs.mcp:mcp:1.7.10:srg@zip",
-        "url": "https://maven.minecraftforge.net",
-        "serverreq": true,
-        "clientreq": true,
-        "downloads": {
-          "artifact": {
-            "path": "de/oceanlabs/mcp/mcp/1.7.10/mcp-1.7.10-srg.zip",
-            "url": "https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp/1.7.10/mcp-1.7.10-srg.zip",
-            "sha1": "10b95bb342f55d681025bf2d698c893d9c4b4201",
-            "size": 292626
-          }
-        }
       },
       {
         "name": "com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.1.2",
@@ -1410,6 +1396,20 @@
             }
           }
         ]
+      },
+      {
+        "name": "net.minecraftforge:forge:1.7.10-10.13.4.1614-1.7.10:universal",
+        "url": "https://maven.minecraftforge.net",
+        "serverreq": true,
+        "clientreq": true,
+        "downloads": {
+          "artifact": {
+            "path": "net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forge-1.7.10-10.13.4.1614-1.7.10-universal.jar",
+            "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forge-1.7.10-10.13.4.1614-1.7.10-universal.jar",
+            "sha1": "25fd97f72beca728112256938e03e8105b1b78cc",
+            "size": 3018833
+          }
+        }
       }
     ]
   }
