@@ -99,6 +99,20 @@
         "url": "https://maven.minecraftforge.net"
       },
       {
+        "name": "de.oceanlabs.mcp:mcp:1.7.10:srg@zip",
+        "url": "https://maven.minecraftforge.net",
+        "serverreq": true,
+        "clientreq": true,
+        "downloads": {
+          "artifact": {
+            "path": "de/oceanlabs/mcp/mcp/1.7.10/mcp-1.7.10-srg.zip",
+            "url": "https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp/1.7.10/mcp-1.7.10-srg.zip",
+            "sha1": "10b95bb342f55d681025bf2d698c893d9c4b4201",
+            "size": 292626
+          }
+        }
+      },
+      {
         "name": "com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.1.2",
         "url": "https://nexus.gtnewhorizons.com/repository/releases",
         "serverreq": true,

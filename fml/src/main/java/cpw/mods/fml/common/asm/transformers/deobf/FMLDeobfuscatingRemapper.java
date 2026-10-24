@@ -16,10 +16,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
@@ -42,9 +45,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharSource;
+import com.google.common.io.Resources;
 
 import cpw.mods.fml.common.patcher.ClassPatchManager;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 public class FMLDeobfuscatingRemapper extends Remapper {
@@ -114,9 +120,7 @@ public class FMLDeobfuscatingRemapper extends Remapper {
         this.classLoader = classLoader;
         try
         {
-            InputStream classData = getClass().getResourceAsStream(deobfFileName);
-            LZMAInputSupplier zis = new LZMAInputSupplier(classData);
-            CharSource srgSource = zis.asCharSource(Charsets.UTF_8);
+            CharSource srgSource = findSrgSource(mcDir, deobfFileName);
             List<String> srgList = srgSource.readLines();
             rawMethodMaps = Maps.newHashMap();
             rawFieldMaps = Maps.newHashMap();
@@ -152,6 +156,45 @@ public class FMLDeobfuscatingRemapper extends Remapper {
     public boolean isRemappedClass(String className)
     {
         return !map(className).equals(className);
+    }
+
+    /**
+     * The MCP mappings, which are not shipped in the universal jar: the joined.srg of
+     * de.oceanlabs.mcp:mcp:{version}:srg@zip, which the launcher puts on the class path (client) and the installer
+     * under libraries/ (server). A bundled deobfuscation data file, as in the development environment, comes first.
+     */
+    private CharSource findSrgSource(File mcDir, String deobfFileName) throws IOException
+    {
+        InputStream bundled = getClass().getResourceAsStream(deobfFileName);
+        if (bundled != null)
+        {
+            return new LZMAInputSupplier(bundled).asCharSource(Charsets.UTF_8);
+        }
+        URL onClassPath = getClass().getResource("/joined.srg");
+        if (onClassPath != null)
+        {
+            return Resources.asCharSource(onClassPath, Charsets.UTF_8);
+        }
+        String mcVersion = (String)FMLInjectionData.data()[4];
+        File srgZip = new File(mcDir, String.format("libraries/de/oceanlabs/mcp/mcp/%1$s/mcp-%1$s-srg.zip", mcVersion));
+        if (!srgZip.isFile())
+        {
+            throw new IOException("The MCP mappings were not found on the class path or at " + srgZip.getAbsolutePath());
+        }
+        ZipFile zip = new ZipFile(srgZip);
+        try
+        {
+            ZipEntry entry = zip.getEntry("joined.srg");
+            if (entry == null)
+            {
+                throw new IOException("No joined.srg in " + srgZip.getAbsolutePath());
+            }
+            return CharSource.wrap(new String(ByteStreams.toByteArray(zip.getInputStream(entry)), Charsets.UTF_8));
+        }
+        finally
+        {
+            zip.close();
+        }
     }
 
     private void parseField(String[] parts)
