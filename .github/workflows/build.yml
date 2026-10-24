@@ -1,0 +1,90 @@
+name: Build
+
+on:
+  push:
+    branches: [ "1.7.10" ]
+    tags: [ "anneal/*/*" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FG_REPO: https://github.com/k0michi/ForgeGradle.git
+  FG_COMMIT: 74fb8fc06f5ad445afbe21da966a1086daca6156
+
+jobs:
+  build:
+    name: Build Anneal
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.outputs.outputs.version }}
+    steps:
+      # git describe needs the history and the anneal/ tags
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+
+      - name: Build ForgeGradle
+        run: |
+          git clone --filter=blob:none "$FG_REPO" "$RUNNER_TEMP/ForgeGradle"
+          git -C "$RUNNER_TEMP/ForgeGradle" checkout "$FG_COMMIT"
+          cd "$RUNNER_TEMP/ForgeGradle"
+          ./gradlew build install
+          echo "FG_VERSION=$(./gradlew -q properties | sed -n 's/^version: //p')" >> "$GITHUB_ENV"
+
+      # Uses Gradle from ForgeGradle
+      - name: Build Anneal
+        run: >-
+          "$RUNNER_TEMP/ForgeGradle/gradlew" --init-script "$RUNNER_TEMP/ForgeGradle/.github/ci/use-local-fg.gradle"
+          setupForge packageInstaller
+
+      - name: Find the outputs
+        id: outputs
+        run: |
+          installer=$(ls build/distributions/anneal-*-installer.jar)
+          version=${installer#build/distributions/anneal-1.7.10-}
+          version=${version%-installer.jar}
+          ls -l "$installer" "build/libs/anneal-1.7.10-$version.jar"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Anneal
+          path: |
+            build/distributions/anneal-*-installer.jar
+            build/libs/anneal-*.jar
+          if-no-files-found: error
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/anneal/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Anneal
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if [ "anneal/1.7.10/$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Built $VERSION from the tag $GITHUB_REF_NAME"
+            exit 1
+          fi
+          prerelease=
+          case "$VERSION" in *-*) prerelease=--prerelease ;; esac
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --title "Anneal 1.7.10-$VERSION" \
+            --generate-notes $prerelease \
+            "distributions/anneal-1.7.10-$VERSION-installer.jar" "libs/anneal-1.7.10-$VERSION.jar"
