@@ -58,8 +58,6 @@ launch4j {
     jreMinVersion = '1.6.0'
 }
 
-tasks.packageUniversal.exclude 'deobfuscation_data-*.lzma'
-
 def patchClasses = [
     'cpw/mods/fml/relauncher/FinalFieldHelper',
     'cpw/mods/fml/common/registry/ObjectHolderRef',
