@@ -74,7 +74,7 @@ def lwjglNatives = '''
 dependencies
 {
     ['lwjgl', 'lwjgl-opengl', 'lwjgl-openal', 'lwjgl-sdl'].each { module ->
-        ['natives-macos-arm64', 'natives-macos', 'natives-linux', 'natives-windows'].each { natives ->
+        ['natives-macos-arm64', 'natives-macos', 'natives-linux-arm64', 'natives-linux', 'natives-windows-arm64', 'natives-windows'].each { natives ->
             runtime("org.lwjgl:${module}:3.4.3:${natives}") { transitive = false }
         }
     }
