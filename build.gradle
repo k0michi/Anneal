@@ -84,9 +84,10 @@ def serverClassPath = {
 task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
     baseName = 'anneal'
     version = "${minecraft.version}-${annealVersion}"
-    from({ zipTree(tasks.packageUniversal.archivePath) }) {
-        patchClasses.each { name -> include "${name}.class", "${name}\$*.class" }
+    from({ zipTree(tasks.packageUniversal.archivePath) }) { spec ->
+        patchClasses.each { name -> spec.include "${name}.class", "${name}\$*.class" }
     }
+    from 'LICENSE-anneal.txt', 'fml/LICENSE-fml.txt', 'MinecraftForge-License.txt'
     manifest {
         attributes 'Main-Class': minecraft.mainClass, 'TweakClass': minecraft.tweakClass, 'Class-Path': serverClassPath()
     }
@@ -101,6 +102,7 @@ tasks.packageInstaller {
     dependsOn packagePatches
     exclude { it.file == tasks.packageUniversal.archivePath }
     exclude '*-changelog.txt', 'Paulscode*'
+    from 'LICENSE-anneal.txt'
     from { tasks.packagePatches.archivePath }
 }
 
@@ -208,6 +210,16 @@ uploadArchives {
             }
 
             licenses {
+                license {
+                    name 'MIT License'
+                    url 'https://opensource.org/licenses/MIT'
+                    distribution 'repo'
+                }
+                license {
+                    name 'GNU Lesser General Public License v2.1 or later'
+                    url 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'
+                    distribution 'repo'
+                }
                 license {
                     name 'Forge Public License'
                     url 'https://raw.github.com/MinecraftForge/MinecraftForge/master/MinecraftForge-License.txt'
