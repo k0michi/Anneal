@@ -83,12 +83,15 @@ dependencies
 
 def runTasks = '''
 
+def javaModuleArgs = ['-XX:+IgnoreUnrecognizedVMOptions', '--add-opens=java.base/java.net=ALL-UNNAMED']
+
 task runClient(type: JavaExec, dependsOn: 'classes') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.gtnewhorizons.retrofuturabootstrap.Main'
     workingDir = file('../run')
     jvmArgs '-Djava.system.class.loader=com.gtnewhorizons.retrofuturabootstrap.RfbSystemClassLoader',
         '-Xmx1024M', '-Xms1024M', "-Djava.library.path=${file('../run/bin/natives')}"
+    jvmArgs javaModuleArgs
     if (System.getProperty('os.name').toLowerCase().contains('mac')) {
         main = 'com.koyomiji.dualwjgl.Launcher'
         jvmArgs '-XstartOnFirstThread', '-Dcom.koyomiji.dualwjgl.main=com.gtnewhorizons.retrofuturabootstrap.Main'
@@ -105,6 +108,7 @@ task runServer(type: JavaExec, dependsOn: 'classes') {
     main = 'com.gtnewhorizons.retrofuturabootstrap.Main'
     workingDir = file('../run')
     jvmArgs '-Djava.system.class.loader=com.gtnewhorizons.retrofuturabootstrap.RfbSystemClassLoader'
+    jvmArgs javaModuleArgs
     args '--tweakClass', 'cpw.mods.fml.common.launcher.FMLServerTweaker'
     if (project.hasProperty('runJavaHome'))
         executable = new File(project.runJavaHome, 'bin/java').path
