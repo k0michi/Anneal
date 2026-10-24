@@ -61,6 +61,7 @@ if (project.hasProperty("crowdinKey"))
 
 
 def patchClasses = [
+    'com/koyomiji/anneal/Anneal',
     'com/koyomiji/anneal/FinalFieldHelper',
     'cpw/mods/fml/common/registry/ObjectHolderRef',
     'cpw/mods/fml/common/registry/ItemStackHolderRef',
@@ -88,6 +89,10 @@ task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
     from({ zipTree(tasks.packageUniversal.archivePath) }) { spec ->
         patchClasses.each { name -> spec.include "${name}.class", "${name}\$*.class" }
     }
+    from('anneal') { spec ->
+        spec.expand version: annealVersion, minecraftVersion: minecraft.version
+    }
+    inputs.property 'annealVersion', annealVersion
     from 'LICENSE-anneal.txt', 'fml/LICENSE-fml.txt', 'MinecraftForge-License.txt'
     manifest {
         attributes 'Main-Class': minecraft.mainClass, 'TweakClass': minecraft.tweakClass, 'Class-Path': serverClassPath()
