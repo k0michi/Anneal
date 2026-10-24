@@ -66,11 +66,37 @@ repositories
 }
 '''
 
+def runTasks = '''
+
+task runClient(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.gtnewhorizons.retrofuturabootstrap.Main'
+    workingDir = file('../run')
+    jvmArgs '-Djava.system.class.loader=com.gtnewhorizons.retrofuturabootstrap.RfbSystemClassLoader',
+        '-Xmx1024M', '-Xms1024M', "-Djava.library.path=${file('../run/bin/natives')}"
+    args '--version', '1.7.10', '--tweakClass', 'cpw.mods.fml.common.launcher.FMLTweaker',
+        '--assetIndex', '1.7.10', '--assetsDir', "${gradle.gradleUserHomeDir}/caches/minecraft/assets",
+        '--accessToken', 'Forge', '--userProperties', '{}', '--username', 'Dev'
+    if (project.hasProperty('runJavaHome'))
+        executable = new File(project.runJavaHome, 'bin/java').path
+}
+
+task runServer(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.gtnewhorizons.retrofuturabootstrap.Main'
+    workingDir = file('../run')
+    jvmArgs '-Djava.system.class.loader=com.gtnewhorizons.retrofuturabootstrap.RfbSystemClassLoader'
+    args '--tweakClass', 'cpw.mods.fml.common.launcher.FMLServerTweaker'
+    if (project.hasProperty('runJavaHome'))
+        executable = new File(project.runJavaHome, 'bin/java').path
+}
+'''
+
 tasks.generateProjectClean.doLast {
     file('eclipse/Clean/build.gradle') << extraRepositories
 }
 tasks.generateProjectForge.doLast {
-    file('eclipse/Forge/build.gradle') << extraRepositories
+    file('eclipse/Forge/build.gradle') << extraRepositories + runTasks
 }
 
 uploadArchives {
