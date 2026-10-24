@@ -172,23 +172,24 @@
       "name": "org.apache.logging.log4j:log4j-core:2.0-beta9"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl:2.9.1"
+      "name": "com.github.k0michi.dualwjgl:dualwjgl:0.1.0-alpha.4",
+      "url" : "https://jitpack.io/"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.1"
+      "name": "com.github.k0michi.dualwjgl:dualwjgl-opengl:0.1.0-alpha.4",
+      "url" : "https://jitpack.io/"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
-      "natives": {
-        "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
-      }
+      "name": "com.github.k0michi.dualwjgl:dualwjgl-openal:0.1.0-alpha.4",
+      "url" : "https://jitpack.io/"
+    },
+    {
+      "name": "com.github.k0michi.dualwjgl:dualwjgl-opengles:0.1.0-alpha.4",
+      "url" : "https://jitpack.io/"
+    },
+    {
+      "name": "com.github.k0michi.dualwjgl:dualwjgl-util:0.1.0-alpha.4",
+      "url" : "https://jitpack.io/"
     },
     {
       "name": "net.java.jinput:jinput-platform:2.0.5",

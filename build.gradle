@@ -63,6 +63,21 @@ def extraRepositories = '''
 repositories
 {
     maven { url 'https://nexus.gtnewhorizons.com/repository/releases/' }
+    maven { url 'https://jitpack.io/' }
+}
+
+configurations.all { exclude group: 'org.lwjgl.lwjgl' }
+'''
+
+def lwjglNatives = '''
+
+dependencies
+{
+    ['lwjgl', 'lwjgl-opengl', 'lwjgl-openal', 'lwjgl-sdl'].each { module ->
+        ['natives-macos-arm64', 'natives-macos', 'natives-linux', 'natives-windows'].each { natives ->
+            runtime("org.lwjgl:${module}:3.4.3:${natives}") { transitive = false }
+        }
+    }
 }
 '''
 
@@ -74,6 +89,10 @@ task runClient(type: JavaExec, dependsOn: 'classes') {
     workingDir = file('../run')
     jvmArgs '-Djava.system.class.loader=com.gtnewhorizons.retrofuturabootstrap.RfbSystemClassLoader',
         '-Xmx1024M', '-Xms1024M', "-Djava.library.path=${file('../run/bin/natives')}"
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        main = 'com.koyomiji.dualwjgl.Launcher'
+        jvmArgs '-XstartOnFirstThread', '-Dcom.koyomiji.dualwjgl.main=com.gtnewhorizons.retrofuturabootstrap.Main'
+    }
     args '--version', '1.7.10', '--tweakClass', 'cpw.mods.fml.common.launcher.FMLTweaker',
         '--assetIndex', '1.7.10', '--assetsDir', "${gradle.gradleUserHomeDir}/caches/minecraft/assets",
         '--accessToken', 'Forge', '--userProperties', '{}', '--username', 'Dev'
@@ -96,7 +115,7 @@ tasks.generateProjectClean.doLast {
     file('eclipse/Clean/build.gradle') << extraRepositories
 }
 tasks.generateProjectForge.doLast {
-    file('eclipse/Forge/build.gradle') << extraRepositories + runTasks
+    file('eclipse/Forge/build.gradle') << extraRepositories + lwjglNatives + runTasks
 }
 
 uploadArchives {
