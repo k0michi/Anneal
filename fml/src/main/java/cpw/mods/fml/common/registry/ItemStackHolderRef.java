@@ -1,16 +1,13 @@
 package cpw.mods.fml.common.registry;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.Level;
 
-import com.google.common.base.Throwables;
-
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.FinalFieldHelper;
 import cpw.mods.fml.common.registry.GameRegistry.ItemStackHolder;
 
 
@@ -33,31 +30,6 @@ class ItemStackHolderRef {
         this.itemName = itemName;
         this.meta = meta;
         this.serializednbt = serializednbt;
-        makeWritable(field);
-    }
-
-    private static Field modifiersField;
-    private static Object reflectionFactory;
-    private static Method newFieldAccessor;
-    private static Method fieldAccessorSet;
-    private static void makeWritable(Field f)
-    {
-        try
-        {
-            if (modifiersField == null)
-            {
-                Method getReflectionFactory = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("getReflectionFactory");
-                reflectionFactory = getReflectionFactory.invoke(null);
-                newFieldAccessor = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("newFieldAccessor", Field.class, boolean.class);
-                fieldAccessorSet = Class.forName("sun.reflect.FieldAccessor").getDeclaredMethod("set", Object.class, Object.class);
-                modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-            }
-            modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
-        } catch (Exception e)
-        {
-            throw Throwables.propagate(e);
-        }
     }
 
     public void apply()
@@ -73,8 +45,7 @@ class ItemStackHolderRef {
         }
         try
         {
-            Object fieldAccessor = newFieldAccessor.invoke(reflectionFactory, field, false);
-            fieldAccessorSet.invoke(fieldAccessor, null, is);
+            FinalFieldHelper.setField(field, null, is);
         }
         catch (Exception e)
         {
