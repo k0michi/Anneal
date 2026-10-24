@@ -60,6 +60,25 @@ launch4j {
 
 tasks.packageUniversal.exclude 'deobfuscation_data-*.lzma'
 
+def patchClasses = [
+    'cpw/mods/fml/relauncher/FinalFieldHelper',
+    'cpw/mods/fml/common/registry/ObjectHolderRef',
+    'cpw/mods/fml/common/registry/ItemStackHolderRef',
+    'net/minecraftforge/common/util/EnumHelper',
+    'cpw/mods/fml/common/launcher/FMLTweaker',
+    'cpw/mods/fml/common/discovery/JarDiscoverer',
+    'cpw/mods/fml/common/discovery/DirectoryDiscoverer',
+    'cpw/mods/fml/common/patcher/ClassPatchManager',
+    'cpw/mods/fml/common/asm/transformers/EventSubscriptionTransformer',
+]
+
+task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
+    classifier = 'patches'
+    from({ zipTree(tasks.packageUniversal.archivePath) }) {
+        patchClasses.each { name -> include "${name}.class", "${name}\$*.class" }
+    }
+}
+
 def extraRepositories = '''
 
 repositories
