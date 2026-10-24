@@ -146,8 +146,28 @@
       "serverreq":true
     },
     {
-      "name": "org.apache.commons:commons-lang3:3.3.2",
-      "serverreq":true
+      "name": "org.apache.commons:commons-lang3:3.18.0",
+      "url" : "https://repo.maven.apache.org/maven2/",
+      "serverreq":true,
+      "clientreq":true
+    },
+    {
+      "name": "org.apache.commons:commons-compress:1.28.0",
+      "url" : "https://repo.maven.apache.org/maven2/",
+      "serverreq":true,
+      "clientreq":true
+    },
+    {
+      "name": "commons-io:commons-io:2.20.0",
+      "url" : "https://repo.maven.apache.org/maven2/",
+      "serverreq":true,
+      "clientreq":true
+    },
+    {
+      "name": "commons-codec:commons-codec:1.19.0",
+      "url" : "https://repo.maven.apache.org/maven2/",
+      "serverreq":true,
+      "clientreq":true
     }
   ]
 }
