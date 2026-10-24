@@ -59,7 +59,7 @@ launch4j {
 }
 
 def patchClasses = [
-    'cpw/mods/fml/relauncher/FinalFieldHelper',
+    'com/koyomiji/anneal/FinalFieldHelper',
     'cpw/mods/fml/common/registry/ObjectHolderRef',
     'cpw/mods/fml/common/registry/ItemStackHolderRef',
     'net/minecraftforge/common/util/EnumHelper',

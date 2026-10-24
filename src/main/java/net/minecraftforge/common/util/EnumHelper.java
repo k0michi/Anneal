@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.FinalFieldHelper;
+import com.koyomiji.anneal.FinalFieldHelper;
 import net.minecraft.block.BlockPressurePlate.Sensitivity;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnumEnchantmentType;

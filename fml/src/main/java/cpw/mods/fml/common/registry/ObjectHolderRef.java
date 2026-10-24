@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import org.apache.logging.log4j.Level;
 import com.google.common.base.Throwables;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.FinalFieldHelper;
+import com.koyomiji.anneal.FinalFieldHelper;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

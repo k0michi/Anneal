@@ -1,4 +1,4 @@
-package cpw.mods.fml.relauncher;
+package com.koyomiji.anneal;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
