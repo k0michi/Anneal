@@ -42,21 +42,22 @@ minecraft {
     installerVersion = "1.7.7"
 }
 
-group = 'net.minecraftforge'
+group = 'com.koyomiji.anneal'
 version = getVersionFromJava(getProject(), 'src/main/java/net/minecraftforge/common/ForgeVersion.java')
 
-jenkins {
-    job = 'minecraftforge'
-}
+def annealVersion = {
+    def describe = ['git', 'describe', '--tags', '--dirty', '--match', 'anneal/[0-9]*'].execute(null, projectDir)
+    def described = describe.text.trim()
+    if (describe.waitFor() == 0)
+        return described - 'anneal/'
+    return '0.0.0-g' + ['git', 'describe', '--always', '--dirty', '--exclude', '*'].execute(null, projectDir).text.trim()
+}()
+def annealArtifact = "com.koyomiji.anneal:anneal:${minecraft.version}-${annealVersion}".toString()
 
 // crowdin stuff
 if (project.hasProperty("crowdinKey"))
     tasks.getLocalizations.apiKey = project.crowdinKey
 
-
-launch4j {
-    jreMinVersion = '1.6.0'
-}
 
 def patchClasses = [
     'com/koyomiji/anneal/FinalFieldHelper',
@@ -81,7 +82,8 @@ def serverClassPath = {
 }
 
 task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
-    classifier = 'patches'
+    baseName = 'anneal'
+    version = "${minecraft.version}-${annealVersion}"
     from({ zipTree(tasks.packageUniversal.archivePath) }) {
         patchClasses.each { name -> include "${name}.class", "${name}\$*.class" }
     }
@@ -91,9 +93,14 @@ task packagePatches(type: Jar, dependsOn: 'packageUniversal') {
 }
 
 tasks.generateInstallJson.addReplacement('@patches_jar@', { tasks.packagePatches.archiveName })
+tasks.generateInstallJson.addReplacement('@anneal_artifact@', annealArtifact)
+tasks.generateInstallJson.addReplacement('@anneal_version@', annealVersion)
 tasks.packageInstaller {
+    baseName = 'anneal'
+    version = "${minecraft.version}-${annealVersion}"
     dependsOn packagePatches
     exclude { it.file == tasks.packageUniversal.archivePath }
+    exclude '*-changelog.txt', 'Paulscode*'
     from { tasks.packagePatches.archivePath }
 }
 
@@ -184,20 +191,20 @@ uploadArchives {
             artifactId = project.archivesBaseName
         }
         pom.project {
-            name project.archivesBaseName
+            name 'Anneal'
             packaging 'jar'
-            description 'Minecraft Forge API'
-            url 'https://github.com/MinecraftForge/MinecraftForge'
+            description 'Minecraft Forge 1.7.10 on modern Java'
+            url 'https://github.com/k0michi/MinecraftForge'
 
             scm {
-                url 'https://github.com/MinecraftForge/MinecraftForge'
-                connection 'scm:git:git://github.com/MinecraftForge/MinecraftForge.git'
-                developerConnection 'scm:git:git@github.com:MinecraftForge/MinecraftForge.git'
+                url 'https://github.com/k0michi/MinecraftForge'
+                connection 'scm:git:git://github.com/k0michi/MinecraftForge.git'
+                developerConnection 'scm:git:git@github.com:k0michi/MinecraftForge.git'
             }
 
             issueManagement {
                 system 'github'
-                url 'https://github.com/MinecraftForge/MinecraftForge/issues'
+                url 'https://github.com/k0michi/MinecraftForge/issues'
             }
 
             licenses {
@@ -209,6 +216,11 @@ uploadArchives {
             }
 
             developers {
+                developer {
+                    id 'k0michi'
+                    name 'k0michi'
+                    roles { role 'developer' }
+                }
                 developer {
                     id 'cpw'
                     name 'cpw'

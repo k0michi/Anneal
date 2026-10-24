@@ -1,16 +1,16 @@
 {
   "install": {
-    "profileName": "@project@",
-    "target": "@minecraft_version@-@project@@version@",
-    "path": "@artifact@",
-    "version": "@project@ @version@",
+    "profileName": "Anneal",
+    "target": "@minecraft_version@-Anneal-@anneal_version@",
+    "path": "@anneal_artifact@",
+    "version": "Anneal @anneal_version@",
     "filePath": "@patches_jar@",
-    "welcome": "Welcome to the simple @project@ installer.",
+    "welcome": "Welcome to the simple Anneal installer.",
     "minecraft": "@minecraft_version@",
     "logo": "/big_logo.png"
   },
   "versionInfo": {
-    "id": "@minecraft_version@-@project@@version@",
+    "id": "@minecraft_version@-Anneal-@anneal_version@",
     "time": "@timestamp@",
     "releaseTime": "1960-01-01T00:00:00-0700",
     "type": "release",
@@ -95,8 +95,7 @@
     },
     "libraries": [
       {
-        "name": "@artifact@",
-        "url": "https://maven.minecraftforge.net"
+        "name": "@anneal_artifact@"
       },
       {
         "name": "com.gtnewhorizons.retrofuturabootstrap:RetroFuturaBootstrap:1.1.2",
