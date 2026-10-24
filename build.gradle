@@ -46,10 +46,11 @@ group = 'com.koyomiji.anneal'
 version = getVersionFromJava(getProject(), 'src/main/java/net/minecraftforge/common/ForgeVersion.java')
 
 def annealVersion = {
-    def describe = ['git', 'describe', '--tags', '--dirty', '--match', 'anneal/[0-9]*'].execute(null, projectDir)
+    def tagPrefix = "anneal/${minecraft.version}/"
+    def describe = ['git', 'describe', '--tags', '--dirty', '--match', "${tagPrefix}[0-9]*".toString()].execute(null, projectDir)
     def described = describe.text.trim()
     if (describe.waitFor() == 0)
-        return described - 'anneal/'
+        return described - tagPrefix
     return '0.0.0-g' + ['git', 'describe', '--always', '--dirty', '--exclude', '*'].execute(null, projectDir).text.trim()
 }()
 def annealArtifact = "com.koyomiji.anneal:anneal:${minecraft.version}-${annealVersion}".toString()
