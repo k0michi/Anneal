@@ -1,7 +1,7 @@
 {
   "install": {
     "profileName": "Anneal",
-    "target": "@minecraft_version@-Anneal-@anneal_version@",
+    "target": "@minecraft_version@-anneal-@anneal_version@",
     "path": "@anneal_artifact@",
     "version": "Anneal @anneal_version@",
     "filePath": "@patches_jar@",
@@ -10,7 +10,7 @@
     "logo": "/big_logo.png"
   },
   "versionInfo": {
-    "id": "@minecraft_version@-Anneal-@anneal_version@",
+    "id": "@minecraft_version@-anneal-@anneal_version@",
     "time": "@timestamp@",
     "releaseTime": "1960-01-01T00:00:00-0700",
     "type": "release",
