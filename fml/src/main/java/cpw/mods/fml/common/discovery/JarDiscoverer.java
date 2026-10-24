@@ -63,6 +63,12 @@ public class JarDiscoverer implements ITypeDiscoverer
                 {
                     continue;
                 }
+                // Java 9 and later: module descriptors are not classes, and the versioned copies of multi-release
+                // jars duplicate the classes at the root
+                if (ze.getName()!=null && (ze.getName().endsWith("module-info.class") || ze.getName().startsWith("META-INF/versions/")))
+                {
+                    continue;
+                }
                 Matcher match = classFile.matcher(ze.getName());
                 if (match.matches())
                 {

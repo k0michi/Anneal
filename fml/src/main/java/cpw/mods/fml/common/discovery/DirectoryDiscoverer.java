@@ -91,7 +91,8 @@ public class DirectoryDiscoverer implements ITypeDiscoverer
             }
             Matcher match = classFile.matcher(file.getName());
 
-            if (match.matches())
+            // a Java 9 module descriptor is not a class
+            if (match.matches() && !file.getName().equals("module-info.class"))
             {
                 ASMModParser modParser = null;
                 try
