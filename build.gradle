@@ -58,6 +58,21 @@ launch4j {
     jreMinVersion = '1.6.0'
 }
 
+def extraRepositories = '''
+
+repositories
+{
+    maven { url 'https://nexus.gtnewhorizons.com/repository/releases/' }
+}
+'''
+
+tasks.generateProjectClean.doLast {
+    file('eclipse/Clean/build.gradle') << extraRepositories
+}
+tasks.generateProjectForge.doLast {
+    file('eclipse/Forge/build.gradle') << extraRepositories
+}
+
 uploadArchives {
     repositories {
         add getProject().repositories.mavenLocal()
