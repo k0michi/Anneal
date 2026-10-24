@@ -34,6 +34,11 @@ public class FMLTweaker implements ITweaker {
         {
             System.setSecurityManager(new FMLSecurityManager());
         }
+        catch (UnsupportedOperationException uoe)
+        {
+            // Java 18 and later refuse security managers (unless java.security.manager=allow before 24); the mods'
+            // System.exit calls are still trapped by TerminalTransformer
+        }
         catch (SecurityException se)
         {
             throw new RuntimeException("FML was unable to install the security manager. The game will not start", se);
