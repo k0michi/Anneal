@@ -1,5 +1,5 @@
 Anneal is built from a fork of Minecraft Forge, so its files are under
-different licences:
+different licenses:
 
 - Code written for Anneal, such as com.koyomiji.anneal.FinalFieldHelper, is
   licensed under the MIT License below.
