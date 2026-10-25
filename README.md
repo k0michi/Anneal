@@ -24,7 +24,7 @@ Forge's maven. Along with the patched classes, Anneal swaps LaunchWrapper for
 ## Installation
 
 Download `anneal-1.7.10-<version>-installer.jar` from the
-[releases](https://github.com/k0michi/MinecraftForge/releases).
+[releases](https://github.com/k0michi/Anneal/releases).
 
 ### Client
 

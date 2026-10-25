@@ -202,17 +202,17 @@ uploadArchives {
             name 'Anneal'
             packaging 'jar'
             description 'Minecraft Forge 1.7.10 on modern Java'
-            url 'https://github.com/k0michi/MinecraftForge'
+            url 'https://github.com/k0michi/Anneal'
 
             scm {
-                url 'https://github.com/k0michi/MinecraftForge'
-                connection 'scm:git:git://github.com/k0michi/MinecraftForge.git'
-                developerConnection 'scm:git:git@github.com:k0michi/MinecraftForge.git'
+                url 'https://github.com/k0michi/Anneal'
+                connection 'scm:git:git://github.com/k0michi/Anneal.git'
+                developerConnection 'scm:git:git@github.com:k0michi/Anneal.git'
             }
 
             issueManagement {
                 system 'github'
-                url 'https://github.com/k0michi/MinecraftForge/issues'
+                url 'https://github.com/k0michi/Anneal/issues'
             }
 
             licenses {

@@ -8,7 +8,7 @@ different licenses:
 - Files from Minecraft Forge, and the changes made to them, remain under the
   Minecraft Forge Public Licence. See MinecraftForge-License.txt.
 
-The source code is available at https://github.com/k0michi/MinecraftForge.
+The source code is available at https://github.com/k0michi/Anneal.
 
 MIT License
 

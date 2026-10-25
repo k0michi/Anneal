@@ -5,7 +5,7 @@
     "description": "Runs Minecraft Forge 1.7.10 on modern Java.",
     "version": "${version}",
     "mcversion": "${minecraftVersion}",
-    "url": "https://github.com/k0michi/MinecraftForge",
+    "url": "https://github.com/k0michi/Anneal",
     "authorList": ["k0michi"],
     "credits": "Built on Minecraft Forge, RetroFuturaBootstrap and DuaLWJGL."
   }
