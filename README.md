@@ -55,7 +55,7 @@ Anneal is not required on both sides of a connection: it accepts clients and ser
 ### Tested
 
 - Server: Java 8, 17, 21 and 25.
-- Client: Java 21 on macOS (arm64). Windows and Linux, and the official launcher, are untested.
+- Client: Java 21 on macOS (arm64). Windows and Linux are untested.
 
 ## Building
 
